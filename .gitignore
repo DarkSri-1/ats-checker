@@ -1,0 +1,30 @@
+# Virtual Environment
+venv/
+env/
+ENV/
+.venv/
+
+# Python bytecode & cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+
+# Uploads & Temp files (keep the folder structure with .gitkeep)
+uploads/*
+!uploads/.gitkeep
+
+# IDE and Editor configurations
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Environment variables
+.env
+.env.local
+
+# Operating System files
+.DS_Store
+Thumbs.db

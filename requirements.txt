@@ -1,0 +1,6 @@
+flask
+pdfplumber
+python-docx
+scikit-learn
+werkzeug
+spacy

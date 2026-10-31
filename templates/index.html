@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ApexATS — Next-Gen Resume & JD Intelligence</title>
+  <!-- Inter & Plus Jakarta Sans Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    :root {
+      --bg-base: #06090e;
+      --surface-1: #0d131f;
+      --surface-2: #141d2e;
+      --surface-glass: rgba(19, 29, 47, 0.65);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-accent: rgba(56, 189, 248, 0.3);
+      --primary: #38bdf8;
+      --primary-glow: rgba(56, 189, 248, 0.25);
+      --success: #34d399;
+      --success-glow: rgba(52, 211, 153, 0.15);
+      --danger: #f87171;
+      --danger-glow: rgba(248, 113, 113, 0.15);
+      --warning: #fbbf24;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --radius-lg: 16px;
+      --radius-md: 10px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg-base);
+      background-image: 
+        radial-gradient(at 15% 15%, rgba(56, 189, 248, 0.12) 0px, transparent 50%),
+        radial-gradient(at 85% 85%, rgba(99, 102, 241, 0.12) 0px, transparent 50%);
+      color: var(--text-main);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2.5rem 1rem;
+    }
+
+    .app-header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+      max-width: 650px;
+    }
+
+    .app-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(56, 189, 248, 0.1);
+      border: 1px solid var(--border-accent);
+      color: var(--primary);
+      padding: 6px 14px;
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+    }
+
+    .app-header h1 {
+      font-size: 2.6rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      background: linear-gradient(135deg, #ffffff 40%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.75rem;
+    }
+
+    .app-header p {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      line-height: 1.5;
+    }
+
+    .main-grid {
+      width: 100%;
+      max-width: 1100px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .card {
+      background: var(--surface-glass);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Form & Input Section */
+    .input-section-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .dropzone {
+      border: 2px dashed rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius-md);
+      background: rgba(13, 19, 31, 0.5);
+      padding: 2.5rem 1.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+
+    .dropzone.drag-over {
+      border-color: var(--primary);
+      background: rgba(56, 189, 248, 0.05);
+      transform: scale(0.99);
+    }
+
+    .dropzone input[type="file"] {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .dropzone-icon {
+      width: 50px;
+      height: 50px;
+      margin: 0 auto 1rem;
+      border-radius: 50%;
+      background: rgba(56, 189, 248, 0.1);
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .file-chip {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--surface-2);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 10px 14px;
+      margin-top: 1rem;
+    }
+
+    .file-chip span {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--primary);
+    }
+
+    .textarea-wrap {
+      margin-top: 1.5rem;
+    }
+
+    .textarea-label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .textarea-label-row span {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    textarea {
+      width: 100%;
+      height: 130px;
+      background: rgba(13, 19, 31, 0.7);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      color: var(--text-main);
+      font-family: inherit;
+      font-size: 0.92rem;
+      resize: vertical;
+      transition: border-color 0.2s;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-glow);
+    }
+
+    .btn-submit {
+      width: 100%;
+      margin-top: 1.5rem;
+      padding: 1rem 1.5rem;
+      border: none;
+      border-radius: var(--radius-md);
+      background: linear-gradient(135deg, #0284c7, #2563eb);
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 10px 20px -5px rgba(2, 132, 199, 0.4);
+      transition: all 0.2s;
+    }
+
+    .btn-submit:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 24px -5px rgba(2, 132, 199, 0.6);
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    /* Scanner Loading Animation */
+    .scan-status {
+      display: none;
+      margin-top: 1.5rem;
+      padding: 1rem;
+      border-radius: var(--radius-md);
+      background: rgba(13, 19, 31, 0.8);
+      border: 1px solid var(--border-accent);
+      text-align: center;
+    }
+
+    .pulse-bar {
+      width: 100%;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 10px;
+      position: relative;
+    }
+
+    .pulse-bar::after {
+      content: '';
+      position: absolute;
+      left: -50%;
+      width: 50%;
+      height: 100%;
+      background: var(--primary);
+      box-shadow: 0 0 12px var(--primary);
+      animation: pulse 1.2s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+      0% { left: -50%; }
+      100% { left: 100%; }
+    }
+
+    /* Dashboard Output Bento Grid */
+    #dashboard {
+      display: none;
+      animation: fadeIn 0.4s ease-out forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .bento-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 1.25rem;
+      margin-top: 1.5rem;
+    }
+
+    .bento-card {
+      background: rgba(13, 19, 31, 0.6);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+    }
+
+    .col-score { grid-column: span 4; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+    .col-summary { grid-column: span 8; display: flex; flex-direction: column; justify-content: space-around; }
+    .col-full { grid-column: span 12; }
+    .col-half { grid-column: span 6; }
+
+    /* Circular SVG Gauge */
+    .gauge-wrap {
+      position: relative;
+      width: 150px;
+      height: 150px;
+    }
+
+    .gauge-wrap svg {
+      transform: rotate(-90deg);
+      width: 100%;
+      height: 100%;
+    }
+
+    .gauge-bg {
+      fill: none;
+      stroke: rgba(255, 255, 255, 0.08);
+      stroke-width: 10;
+    }
+
+    .gauge-val {
+      fill: none;
+      stroke: var(--primary);
+      stroke-width: 10;
+      stroke-linecap: round;
+      stroke-dasharray: 408;
+      stroke-dashoffset: 408;
+      transition: stroke-dashoffset 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .gauge-center-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .stat-metric-row {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+
+    .stat-mini-card {
+      background: var(--surface-2);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 1rem;
+    }
+
+    .stat-mini-card p {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .stat-mini-card h3 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-top: 4px;
+    }
+
+    /* Badges & Feedback Lists */
+    .tag-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 0.75rem;
+    }
+
+    .tag {
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .tag-matched { background: var(--success-glow); border: 1px solid rgba(52, 211, 153, 0.3); color: var(--success); }
+    .tag-missing { background: var(--danger-glow); border: 1px solid rgba(248, 113, 113, 0.3); color: var(--danger); }
+    .tag-neutral { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-subtle); color: var(--text-main); }
+
+    .feedback-list {
+      list-style: none;
+      margin-top: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .feedback-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.9rem;
+      color: #cbd5e1;
+      line-height: 1.4;
+      background: rgba(255, 255, 255, 0.02);
+      padding: 10px 12px;
+      border-radius: 6px;
+    }
+
+    @media (max-width: 820px) {
+      .col-score, .col-summary, .col-half { grid-column: span 12; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="app-header">
+    <div class="app-badge">
+      <i data-lucide="shield-check" style="width: 14px; height: 14px;"></i>
+      Neural Parser Engine
+    </div>
+    <h1>ATS Resume Intelligence</h1>
+    <p>Audit format hygiene, detect missing competencies, and calculate strict parser scores against any Job Description.</p>
+  </header>
+
+  <main class="main-grid">
+    <!-- Analysis Form Card -->
+    <div class="card">
+      <form id="atsForm" enctype="multipart/form-data">
+        <div class="input-section-title">
+          <i data-lucide="file-up" style="color: var(--primary);"></i>
+          <span>1. Upload Candidate Resume</span>
+        </div>
+
+        <div class="dropzone" id="dropzone">
+          <input type="file" id="resumeInput" name="resume" accept=".pdf,.docx" required>
+          <div class="dropzone-icon">
+            <i data-lucide="upload-cloud"></i>
+          </div>
+          <h4 style="font-size: 1rem; font-weight: 600; margin-bottom: 4px;">Drag & Drop your resume here</h4>
+          <p style="font-size: 0.85rem; color: var(--text-muted);">Supports PDF & DOCX formats (Max 50MB)</p>
+        </div>
+
+        <div class="file-chip" id="fileChip">
+          <span><i data-lucide="file-text" style="width: 16px;"></i> <span id="fileName">resume.pdf</span></span>
+          <i data-lucide="check" style="color: var(--success); width: 18px;"></i>
+        </div>
+
+        <div class="textarea-wrap">
+          <div class="textarea-label-row">
+            <div class="input-section-title" style="margin-bottom:0;">
+              <i data-lucide="briefcase" style="color: var(--primary);"></i>
+              <span>2. Target Job Description</span>
+            </div>
+            <span>Optional (Leave empty for structure-only audit)</span>
+          </div>
+          <textarea name="jd_text" placeholder="Paste the job description or required core qualifications here..."></textarea>
+        </div>
+
+        <button type="submit" class="btn-submit" id="submitBtn">
+          <i data-lucide="zap" style="width: 18px;"></i>
+          <span>Run Deep ATS Scan</span>
+        </button>
+
+        <div class="scan-status" id="scanStatus">
+          <p id="statusMsg" style="font-size: 0.9rem; font-weight: 500;">Running spatial tokenization...</p>
+          <div class="pulse-bar"></div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Results Bento Grid Card -->
+    <div class="card" id="dashboard">
+      <div class="input-section-title" style="justify-content: space-between;">
+        <span style="display: flex; align-items: center; gap: 8px;">
+          <i data-lucide="activity" style="color: var(--primary);"></i>
+          <span>ATS Diagnostic Report</span>
+        </span>
+        <span id="modeBadge" class="tag tag-neutral"></span>
+      </div>
+
+      <div class="bento-grid">
+        <!-- Circular Score Card -->
+        <div class="bento-card col-score">
+          <div class="gauge-wrap">
+            <svg viewBox="0 0 150 150">
+              <circle class="gauge-bg" cx="75" cy="75" r="65"></circle>
+              <circle class="gauge-val" id="gaugeCircle" cx="75" cy="75" r="65"></circle>
+            </svg>
+            <div class="gauge-center-text" id="scoreValue">0</div>
+          </div>
+          <h4 style="margin-top: 1rem; font-weight: 700;">Overall ATS Fit</h4>
+          <p style="font-size: 0.8rem; color: var(--text-muted);">Aggregate compatibility</p>
+        </div>
+
+        <!-- Metrics Overview -->
+        <div class="bento-card col-summary">
+          <div class="stat-metric-row">
+            <div class="stat-mini-card">
+              <p>Match Quality</p>
+              <h3 id="statMatch">--</h3>
+            </div>
+            <div class="stat-mini-card">
+              <p>Structure & Hygiene</p>
+              <h3 id="statHygiene">--</h3>
+            </div>
+            <div class="stat-mini-card">
+              <p>Impact Metrics Detected</p>
+              <h3 id="statMetrics">--</h3>
+            </div>
+            <div class="stat-mini-card">
+              <p>Total Words</p>
+              <h3 id="statWords">--</h3>
+            </div>
+          </div>
+        </div>
+
+        <!-- Matched & Missing Skills -->
+        <div class="bento-card col-half" id="matchedSkillsCard">
+          <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--success); display: flex; align-items: center; gap: 6px;">
+            <i data-lucide="check-circle-2" style="width: 16px;"></i> Matched Core Skills
+          </h4>
+          <div class="tag-container" id="matchedSkillsList"></div>
+        </div>
+
+        <div class="bento-card col-half" id="missingSkillsCard">
+          <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--danger); display: flex; align-items: center; gap: 6px;">
+            <i data-lucide="alert-triangle" style="width: 16px;"></i> Missing / Unidentified Skills
+          </h4>
+          <div class="tag-container" id="missingSkillsList"></div>
+        </div>
+
+        <!-- Recommendations List -->
+        <div class="bento-card col-full">
+          <h4 style="font-size: 0.95rem; font-weight: 700; display: flex; align-items: center; gap: 6px;">
+            <i data-lucide="list-checks" style="width: 16px; color: var(--primary);"></i> Actionable Optimizations
+          </h4>
+          <ul class="feedback-list" id="feedbackContainer"></ul>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    lucide.createIcons();
+
+    const fileInput = document.getElementById('resumeInput');
+    const dropzone = document.getElementById('dropzone');
+    const fileChip = document.getElementById('fileChip');
+    const fileName = document.getElementById('fileName');
+    const atsForm = document.getElementById('atsForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const scanStatus = document.getElementById('scanStatus');
+    const statusMsg = document.getElementById('statusMsg');
+    const dashboard = document.getElementById('dashboard');
+
+    // Drag-and-drop interactions
+    ['dragenter', 'dragover'].forEach(eventName => {
+      dropzone.addEventListener(eventName, (e) => {
+        e.preventDefault();
+        dropzone.classList.add('drag-over');
+      }, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+      dropzone.addEventListener(eventName, (e) => {
+        e.preventDefault();
+        dropzone.classList.remove('drag-over');
+      }, false);
+    });
+
+    fileInput.addEventListener('change', () => {
+      if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+        if (file.size > 50 * 1024 * 1024) {
+          alert('File exceeds 50MB limit. Please upload a smaller file.');
+          fileInput.value = '';
+          fileChip.style.display = 'none';
+          return;
+        }
+        const sizeMb = (file.size / (1024 * 1024)).toFixed(1);
+        fileName.innerText = `${file.name} (${sizeMb} MB)`;
+        fileChip.style.display = 'flex';
+      }
+    });
+
+    // Form submission & animated visualization
+    atsForm.onsubmit = async (e) => {
+      e.preventDefault();
+      submitBtn.disabled = true;
+      scanStatus.style.display = 'block';
+
+      // Milestones animation
+      const milestones = [
+        "Ingesting PDF / DOCX stream...",
+        "Checking section boundaries and contact vectors...",
+        "Running token & n-gram extraction...",
+        "Comparing against ATS parsing rules..."
+      ];
+      let step = 0;
+      const interval = setInterval(() => {
+        step = (step + 1) % milestones.length;
+        statusMsg.innerText = milestones[step];
+      }, 700);
+
+      try {
+        const res = await fetch('/analyze', {
+          method: 'POST',
+          body: new FormData(atsForm)
+        });
+        const data = await res.json();
+
+        clearInterval(interval);
+        scanStatus.style.display = 'none';
+        submitBtn.disabled = false;
+
+        if (data.error) {
+          alert('Analysis Error: ' + data.error);
+          return;
+        }
+
+        renderDashboard(data);
+      } catch (err) {
+        clearInterval(interval);
+        scanStatus.style.display = 'none';
+        submitBtn.disabled = false;
+        alert('Server connection failed: ' + err.message);
+      }
+    };
+
+    function renderDashboard(data) {
+      dashboard.style.display = 'block';
+      dashboard.scrollIntoView({ behavior: 'smooth' });
+
+      const isJD = data.mode === 'with_jd';
+      const targetScore = isJD ? Math.round(data.overall_fit_score) : Math.round(data.score);
+
+      // 1. Animated Score Gauge
+      const circle = document.getElementById('gaugeCircle');
+      const scoreValue = document.getElementById('scoreValue');
+      const circumference = 2 * Math.PI * 65; // ~408.4
+      const offset = circumference - (targetScore / 100) * circumference;
+      
+      circle.style.strokeDasharray = `${circumference}`;
+      circle.style.strokeDashoffset = `${offset}`;
+      circle.style.stroke = targetScore >= 75 ? 'var(--success)' : targetScore >= 50 ? 'var(--warning)' : 'var(--danger)';
+
+      let current = 0;
+      const counter = setInterval(() => {
+        if (current >= targetScore) {
+          scoreValue.innerText = targetScore;
+          clearInterval(counter);
+        } else {
+          current++;
+          scoreValue.innerText = current;
+        }
+      }, 12);
+
+      // 2. Mode Badge & Stats
+      document.getElementById('modeBadge').innerText = isJD ? 'Mode: Targeted JD Match' : 'Mode: Structural Audit';
+      document.getElementById('statMatch').innerText = isJD ? `${data.match_percentage}%` : 'N/A';
+      document.getElementById('statHygiene').innerText = isJD ? `${data.hygiene_score}/100` : `${data.score}/100`;
+      document.getElementById('statMetrics').innerText = data.action_verb_count ? `${data.action_verb_count} verbs` : 'Evaluated';
+      document.getElementById('statWords').innerText = data.word_count || 'Analyzed';
+
+      // 3. Matched & Missing Skills / Keywords
+      const matchedContainer = document.getElementById('matchedSkillsList');
+      const missingContainer = document.getElementById('missingSkillsList');
+      matchedContainer.innerHTML = '';
+      missingContainer.innerHTML = '';
+
+      if (isJD) {
+        document.getElementById('matchedSkillsCard').style.display = 'block';
+        document.getElementById('missingSkillsCard').style.display = 'block';
+
+        const matched = data.matched_skills || [];
+        const missing = data.missing_skills || data.missing_keywords || [];
+
+        matchedContainer.innerHTML = matched.length 
+          ? matched.map(s => `<span class="tag tag-matched"><i data-lucide="check" style="width:12px;"></i>${s}</span>`).join('') 
+          : '<span style="color:var(--text-muted); font-size:0.85rem;">No exact keyword matches found.</span>';
+
+        missingContainer.innerHTML = missing.length 
+          ? missing.map(s => `<span class="tag tag-missing"><i data-lucide="x" style="width:12px;"></i>${s}</span>`).join('') 
+          : '<span style="color:var(--text-muted); font-size:0.85rem;">No critical gaps identified!</span>';
+      } else {
+        document.getElementById('matchedSkillsCard').style.display = 'none';
+        document.getElementById('missingSkillsCard').style.display = 'none';
+      }
+
+      // 4. Recommendations
+      const feedbackBox = document.getElementById('feedbackContainer');
+      feedbackBox.innerHTML = data.feedback.map(item => `
+        <li class="feedback-item">
+          <i data-lucide="chevron-right" style="color:var(--primary); width:16px; flex-shrink: 0; margin-top:2px;"></i>
+          <span>${item}</span>
+        </li>
+      `).join('');
+
+      lucide.createIcons();
+    }
+  </script>
+</body>
+</html>
