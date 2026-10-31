@@ -136,7 +136,7 @@ $$\text{Overall Score} = (0.60 \times \text{Skill Match \%}) + (0.40 \times \tex
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/<your-username>/ats-checker.git
+   git clone https://github.com/DarkSri-1/ats-checker.git
    cd ats-checker
    ```
 
